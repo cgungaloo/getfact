@@ -1,0 +1,84 @@
+.jumbotron{
+	background-color:#C2DAE2;
+ 	line-height: 10px;
+}
+
+.jumbotron h1,.jumbotron a{
+	font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
+	font-size: 2.5em;
+	color:#795948;
+	text-align: center;
+}
+
+.jumbotron h2{
+	font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
+	font-size: 1.5em;
+	color:#B98569;
+	text-align: center;
+}
+
+body {
+	background-color: #F4EFEC;
+}
+
+.post h1,a{
+	font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
+	font-size: 1em;
+	color:#667CA2;
+}
+
+.post p{
+	font-family: 'Vollkorn', Georgia, Times, serif;
+ font-size: 16px;
+ line-height: 25px;
+}
+
+.fcList{
+	margin-left: 15%;	
+}
+
+.newFact{
+	float:right;
+}
+
+.toolbar{
+	padding-bottom: 5px;
+	background-color: #333;
+}
+
+
+.toolbar ul{
+	list-style-type: none;
+	margin: 0;
+    padding: 0;
+    overflow: hidden;
+    padding-top: 5px;
+}
+
+.toolbar li{
+    float: left;
+}
+
+.navbar-brand{
+	background-color: #333;
+}
+
+.toolbar p{
+	color: #FFFFFF;
+}
+
+#user{
+	float: right;
+	margin-right: 1%;
+}
+
+#user li{
+	margin-right: 20px;
+}
+
+#user p{
+	font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
+	font-size: 16px;
+ 	line-height: 25px;
+ 	margin-top: 10px;	
+}

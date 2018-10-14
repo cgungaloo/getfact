@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	<div class="fact_detail">
+    <div class="post">
+        {% if fc.published_date %}
+            <div class="date">
+                {{ fc.published_date }}
+            </div>
+        {% endif %}
+        <h1>{{ fc.title }}</h1>
+        <p>{{ fc.author }}</p>
+        <p>{{ fc.text|linebreaksbr }}</p>
+        {% if user.is_authenticated %}
+        	{% if fc.author == user %}
+        		<a class="btn btn-default" href="{% url 'fc_edit' pk=fc.pk %}">Edit</a>
+        	{% endif %}
+        	<a href="{% url 'add_comment_to_post' pk=fc.pk %}">Check Fact</a>
+        {% else %}
+        	<a href="{% url 'login' %}">Log in to check fact</a>
+        {% endif %}
+    </div>
+
+    {% for comment in fc.comments.all %}
+    <div class="comment">
+        <div class="date">{{ comment.created_date }}</div>
+        <strong>{{ comment.author }}</strong>
+        <p>{{ comment.text|linebreaks }}</p>
+    </div>
+	{% empty %}
+    	<p>No fact checks yet :(</p>
+	{% endfor %}
+	</div>
+{% endblock %}
