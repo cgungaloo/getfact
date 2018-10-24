@@ -1,12 +1,14 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Fact, Comment
+from .models import Fact, Comment, LikeDislike
 from django.utils import timezone
 from .forms import FcForm, CommentForm
 from django.shortcuts import redirect, render
-
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views import generic
+from django.http import HttpResponse
+import json
 
 # Create your views here.
 def home(request):
@@ -58,6 +60,62 @@ def add_comment_to_post(request,pk):
 	else:
 		form =CommentForm()
 	return render(request,'add_comment_to_post.html',{'form':form})
+
+@login_required
+def likeFact(request):
+
+	fc_id = None
+	fc=None
+	if request.method == 'GET':
+		fc_id = request.GET['fc_id']
+		fc = get_object_or_404(Fact, pk=fc_id)
+	try:
+		likedislike = LikeDislike.objects.get(fcId=fc_id,user=request.user)
+		if likedislike.vote == -1:
+			likedislike.vote =1
+			likedislike.save()
+			fc.totalLikes +=1
+			fc.totalDislikes -=1
+			fc.save()
+		print("Got LikeDislike")
+	except LikeDislike.DoesNotExist:
+		print("DoesNotExist")
+		likedislike = LikeDislike(vote=1, user=request.user,fcId=fc)
+		fc.totalLikes +=1
+		fc.save()
+		likedislike.save()
+
+	likesdata ={'likes':fc.totalLikes,'dislikes': fc.totalDislikes} 
+	return HttpResponse(json.dumps(likesdata))
+
+@login_required
+def dislikeFact(request):
+
+	fc_id = None
+	fc=None
+	if request.method == 'GET':
+		fc_id = request.GET['fc_id']
+		fc = get_object_or_404(Fact, pk=fc_id)
+	try:
+		likedislike = LikeDislike.objects.get(fcId=fc_id,user=request.user)
+		print(likedislike.vote)
+		if likedislike.vote == 1:
+			likedislike.vote = -1
+			likedislike.save()
+			fc.totalLikes -=1
+			fc.totalDislikes +=1
+			fc.save()
+		print("Got LikeDislike")
+	except LikeDislike.DoesNotExist:
+		print("DoesNotExist")
+		likedislike = LikeDislike(vote=1, user=request.user,fcId=fc)
+		fc.totalDislikes +=1
+		fc.save()
+		likedislike.save()
+
+	likesdata ={'likes':fc.totalLikes,'dislikes': fc.totalDislikes}
+
+	return HttpResponse(json.dumps(likesdata))
 
 class SignUp(generic.CreateView):
     form_class = UserCreationForm

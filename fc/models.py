@@ -12,6 +12,8 @@ class Fact(models.Model):
 		default=timezone.now)
 	published_date = models.DateTimeField(
 		blank=True, null=True)
+	totalLikes = models.IntegerField(default=0)
+	totalDislikes = models.IntegerField(default=0)
 
 	def publish(self):
 		self.published_date = timezone.now()
@@ -19,6 +21,19 @@ class Fact(models.Model):
 
 	def __str__(self):
 		return self.title
+
+class LikeDislike(models.Model):
+	LIKE = 1
+	DISLIKE = -1
+
+	VOTES = (
+		(DISLIKE, 'Dislike'),
+		(LIKE, 'Like')
+	)
+
+	vote = models.SmallIntegerField(verbose_name="vote", choices=VOTES)
+	user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+	fcId = models.ForeignKey('fc.Fact', on_delete=models.CASCADE)
 
 class Comment(models.Model):
 	author = models.ForeignKey('auth.User', on_delete=models.CASCADE)

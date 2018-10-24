@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
-
+{% load staticfiles %}
 {% block content %}
+    <head>
+        <script src="{% static 'js/jquery.js' %}"></script>
+        <script src="{% static 'js/ajax-js.js' %}"></script>
+    </head>
 	<div class="fact_detail">
     <div class="post">
         {% if fc.published_date %}
@@ -11,6 +15,18 @@
         <h1>{{ fc.title }}</h1>
         <p>{{ fc.author }}</p>
         <p>{{ fc.text|linebreaksbr }}</p>
+        <strong>Likes: </strong><strong id="like_count">{{ fc.totalLikes }}</strong> 
+        <strong>Dislikes: </strong><strong id="dislike_count">{{ fc.totalDislikes }}</strong> 
+        <button id="likes" data-fcid="{{fc.id}}" class="btn btn-primary" type="button">
+            <span class="glyphicon glyphicon-thumbs-up"></span>
+            Like
+        </button>
+
+        <button id="dislikes" data-fcid="{{fc.id}}" class="btn btn-primary" type="button">
+            <span class="glyphicon glyphicon-thumbs-down"></span>
+            Dislike
+        </button>
+
         {% if user.is_authenticated %}
         	{% if fc.author == user %}
         		<a class="btn btn-default" href="{% url 'fc_edit' pk=fc.pk %}">Edit</a>
@@ -28,7 +44,7 @@
         <p>{{ comment.text|linebreaks }}</p>
     </div>
 	{% empty %}
-    	<p>No fact checks yet :(</p>
+    	<p>No fact checks yet, keep hope alive ;)</p>
 	{% endfor %}
 	</div>
 {% endblock %}
