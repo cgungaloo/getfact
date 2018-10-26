@@ -13,6 +13,7 @@
             </div>
         {% endif %}
         <h1>{{ fc.title }}</h1>
+        <img src="{{ fc.author.profile.image.url }}" width="240">
         <p>{{ fc.author }}</p>
         <p>{{ fc.text|linebreaksbr }}</p>
         <strong>Likes: </strong><strong id="like_count">{{ fc.totalLikes }}</strong> 
@@ -30,6 +31,7 @@
         {% if user.is_authenticated %}
         	{% if fc.author == user %}
         		<a class="btn btn-default" href="{% url 'fc_edit' pk=fc.pk %}">Edit</a>
+                <a class="btn btn-default" href="{% url 'fc_delete' pk=fc.pk %}">Delete</a>
         	{% endif %}
         	<a href="{% url 'add_comment_to_post' pk=fc.pk %}">Check Fact</a>
         {% else %}
@@ -42,6 +44,11 @@
         <div class="date">{{ comment.created_date }}</div>
         <strong>{{ comment.author }}</strong>
         <p>{{ comment.text|linebreaks }}</p>
+        {% if user.is_authenticated %}
+            {% if comment.author == user %}
+                <a class="btn btn-default" href="{% url 'delete_comment' pk=comment.pk fpk=fc.pk %}">Delete</a>
+            {% endif %}
+        {% endif %}
     </div>
 	{% empty %}
     	<p>No fact checks yet, keep hope alive ;)</p>

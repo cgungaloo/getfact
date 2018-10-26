@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Fact, Comment, LikeDislike
+from .models import Fact, Comment, LikeDislike, User
 from django.utils import timezone
 from .forms import FcForm, CommentForm
 from django.shortcuts import redirect, render
@@ -12,6 +12,14 @@ import json
 
 # Create your views here.
 def home(request):
+	# print(str(request.user))
+	# if str(request.user) != "AnonymousUser":
+	# 	try:
+	# 		getuser = User.objects.get(user=request.user)
+	# 		print(getuser)
+	# 	except User.DoesNotExist:
+	# 		newUser= User(user=request.user)
+	# 		newUser.save()
 	facts = Fact.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
 
 	return render(request, 'home.html',{'facts':facts})
@@ -54,12 +62,40 @@ def add_comment_to_post(request,pk):
 		form =CommentForm(request.POST)
 		if form.is_valid():
 			comment = form.save(commit=False)
+			comment.author = request.user
 			comment.comment = fc
 			comment.save()
 			return redirect('fc_detail',pk=fc.pk)
 	else:
 		form =CommentForm()
 	return render(request,'add_comment_to_post.html',{'form':form})
+
+@login_required
+def fc_delete(request,pk):
+	fc = get_object_or_404(Fact, pk=pk)
+
+	try:
+		likesdislikeForFact = LikeDislike.objects.get(fcId=pk).delete()
+	except LikeDislike.DoesNotExist:
+		print("No likes or dislikes to delete for " + str(pk))
+
+	try:
+		commentsForFact= Comment.objects.get(comment=fc).delete()
+	except Comment.DoesNotExist:
+		print("No comments to delete for " + str(pk))
+
+	fc.delete()
+	facts = Fact.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
+	return render(request, 'home.html',{'facts':facts})
+
+@login_required
+def delete_comment(request,pk,fpk):
+	comment = Comment.objects.get(pk=pk)
+	if comment.author == request.user:
+		print("Deleting")
+		comment.delete()
+	return redirect('fc_detail',pk=fpk)
+
 
 @login_required
 def likeFact(request):
@@ -108,7 +144,7 @@ def dislikeFact(request):
 		print("Got LikeDislike")
 	except LikeDislike.DoesNotExist:
 		print("DoesNotExist")
-		likedislike = LikeDislike(vote=1, user=request.user,fcId=fc)
+		likedislike = LikeDislike(vote=-1, user=request.user,fcId=fc)
 		fc.totalDislikes +=1
 		fc.save()
 		likedislike.save()
