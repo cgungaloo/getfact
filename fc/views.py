@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Fact, Comment, LikeDislike, User
+from .models import Fact, Comment, LikeDislike, User, ReviewComment
 from django.utils import timezone
 from .forms import FcForm, CommentForm
 from django.shortcuts import redirect, render
@@ -12,14 +12,6 @@ import json
 
 # Create your views here.
 def home(request):
-	# print(str(request.user))
-	# if str(request.user) != "AnonymousUser":
-	# 	try:
-	# 		getuser = User.objects.get(user=request.user)
-	# 		print(getuser)
-	# 	except User.DoesNotExist:
-	# 		newUser= User(user=request.user)
-	# 		newUser.save()
 	facts = Fact.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
 
 	return render(request, 'home.html',{'facts':facts})
@@ -99,7 +91,7 @@ def delete_comment(request,pk,fpk):
 
 @login_required
 def likeFact(request):
-
+	print("Im in the view")
 	fc_id = None
 	fc=None
 	if request.method == 'GET':
@@ -152,6 +144,97 @@ def dislikeFact(request):
 	likesdata ={'likes':fc.totalLikes,'dislikes': fc.totalDislikes}
 
 	return HttpResponse(json.dumps(likesdata))
+
+@login_required
+def trueComment(request):
+	c_id = None
+	comment = None
+	if request.method == 'GET':
+		c_id = request.GET['c_id']
+		comment = get_object_or_404(Comment, pk=c_id)
+	try:
+		commentreview = ReviewComment.objects.get(comment=comment, user=request.user)
+		if commentreview.vote == -1 or commentreview.vote ==0:
+			if commentreview.vote ==0:
+				comment.totalSortOfs -=1 
+			if commentreview.vote == -1:
+				comment.totalFalses -=1 
+			commentreview.vote =1
+			commentreview.save()
+			comment.totalTrues +=1
+			comment.save()
+	except ReviewComment.DoesNotExist:
+		commentreview = ReviewComment(vote=1,user=request.user,comment=comment)
+		comment.totalTrues +=1
+		comment.save()
+		commentreview.save()
+
+	commentReviewData ={'trues':comment.totalTrues,'sortofs': comment.totalSortOfs,'falses':comment.totalFalses}
+
+	return HttpResponse(json.dumps(commentReviewData))
+
+@login_required
+def falseComment(request):
+	c_id = None
+	comment = None
+	if request.method == 'GET':
+		c_id = request.GET['c_id']
+		comment = get_object_or_404(Comment, pk=c_id)
+
+	print(comment)
+	try:
+		commentreview = ReviewComment.objects.get(comment=comment, user=request.user)
+		print(str(commentreview.vote))
+		if commentreview.vote == 1 or commentreview.vote ==0:
+			print("Condition met")
+			if commentreview.vote == 0:
+				comment.totalSortOfs -=1 
+			if commentreview.vote == 1:
+				comment.totalTrues -=1 
+			commentreview.vote = -1
+			commentreview.save()
+			comment.totalFalses +=1
+			comment.save()
+	except ReviewComment.DoesNotExist:
+		commentreview = ReviewComment(vote=-1,user=request.user,comment=comment)
+		comment.totalFalses +=1
+		comment.save()
+		commentreview.save()
+
+	commentReviewData ={'trues':comment.totalTrues,'sortofs': comment.totalSortOfs,'falses':comment.totalFalses}
+
+	return HttpResponse(json.dumps(commentReviewData))
+
+@login_required
+def sortOfComment(request):
+	c_id = None
+	comment = None
+	if request.method == 'GET':
+		c_id = request.GET['c_id']
+		comment = get_object_or_404(Comment, pk=c_id)
+	try:
+		commentreview = ReviewComment.objects.get(comment=comment, user=request.user)
+		if commentreview.vote == 1 or commentreview.vote == -1:
+			if commentreview.vote == 1:
+				comment.totalTrues -=1 
+			if commentreview.vote == -1:
+				comment.totalFalses -=1
+			commentreview.vote = 0
+			commentreview.save()
+			comment.totalSortOfs +=1
+			comment.save()
+
+	except ReviewComment.DoesNotExist:
+		commentreview = ReviewComment(vote=0,user=request.user,comment=comment)
+		comment.totalSortOfs +=1
+		comment.save()
+		commentreview.save()
+
+	commentReviewData ={'trues':comment.totalTrues,'sortofs': comment.totalSortOfs,'falses':comment.totalFalses}
+
+	return HttpResponse(json.dumps(commentReviewData))
+
+
 
 class SignUp(generic.CreateView):
     form_class = UserCreationForm

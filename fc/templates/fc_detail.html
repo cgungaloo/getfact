@@ -16,17 +16,19 @@
         <img src="{{ fc.author.profile.image.url }}" width="240">
         <p>{{ fc.author }}</p>
         <p>{{ fc.text|linebreaksbr }}</p>
-        <strong>Likes: </strong><strong id="like_count">{{ fc.totalLikes }}</strong> 
-        <strong>Dislikes: </strong><strong id="dislike_count">{{ fc.totalDislikes }}</strong> 
-        <button id="likes" data-fcid="{{fc.id}}" class="btn btn-primary" type="button">
-            <span class="glyphicon glyphicon-thumbs-up"></span>
-            Like
-        </button>
 
-        <button id="dislikes" data-fcid="{{fc.id}}" class="btn btn-primary" type="button">
-            <span class="glyphicon glyphicon-thumbs-down"></span>
-            Dislike
-        </button>
+        <div data-role="review_container" data-fc_id="{{fc.id}}">
+            <strong>Likes: </strong><strong data-role="like_count">{{ fc.totalLikes }}</strong> 
+            <strong>Dislikes: </strong><strong data-role="dislike_count">{{ fc.totalDislikes }}</strong>
+                <button data-action="likes" class="btn btn-primary" type="button">
+                    <span class="glyphicon glyphicon-thumbs-up"></span>
+                    Like
+                </button>
+                <button data-action="dislikes" class="btn btn-primary" type="button">
+                    <span class="glyphicon glyphicon-thumbs-down"></span>
+                    Dislike
+                </button>
+        </div>
 
         {% if user.is_authenticated %}
         	{% if fc.author == user %}
@@ -44,6 +46,27 @@
         <div class="date">{{ comment.created_date }}</div>
         <strong>{{ comment.author }}</strong>
         <p>{{ comment.text|linebreaks }}</p>
+
+        <div data-role="creview_container" data-c_id="{{comment.id}}">
+            <strong>True: </strong><strong data-role="true_count">{{ comment.totalTrues }}</strong> 
+            <strong>Sort Of True: </strong><strong data-role="sortof_count">{{ comment.totalSortOfs }}</strong> 
+            <strong>False: </strong><strong data-role="false_count">{{ comment.totalFalses }}</strong> 
+
+            <button data-action="trueComment" class="btn btn-primary" type="button">
+                <span class="glyphicon glyphicon-thumbs-up"></span>
+                True
+            </button>
+            <button data-action="sortOfComment" class="btn btn-primary" type="button">
+                <span class="glyphicon glyphicon-minus"></span>
+                Sort Of True
+            </button>
+            <button data-action="falseComment" class="btn btn-primary" type="button">
+                <span class="glyphicon glyphicon-thumbs-down"></span>
+                False
+            </button>
+        </div>
+
+
         {% if user.is_authenticated %}
             {% if comment.author == user %}
                 <a class="btn btn-default" href="{% url 'delete_comment' pk=comment.pk fpk=fc.pk %}">Delete</a>

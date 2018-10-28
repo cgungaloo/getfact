@@ -43,6 +43,25 @@ class Comment(models.Model):
 	comment = models.ForeignKey('fc.Fact', on_delete=models.CASCADE, related_name='comments')
 	text = models.TextField()
 	created_date = models.DateTimeField(default=timezone.now)
+	totalTrues = models.IntegerField(default=0)
+	totalSortOfs = models.IntegerField(default=0)
+	totalFalses = models.IntegerField(default=0)
+
+class ReviewComment(models.Model):
+	isTrue = 1
+	isSortOfTrue = 0
+	isFalse = -1
+
+	VOTES =(
+		(isTrue, 'True'),
+		(isSortOfTrue,'Sort Of True'),
+		(isFalse,'False')
+		)
+
+	vote = models.SmallIntegerField(verbose_name="vote", choices=VOTES)
+	user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+	comment = models.ForeignKey('fc.Comment', on_delete=models.CASCADE)
+
 
 class Profile(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -56,5 +75,3 @@ def create_user_profile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
 	instance.profile.save()
-
-

@@ -18,6 +18,9 @@ urlpatterns =[
 	url(r'^fc/(?P<pk>\d+)/comment_delete/(?P<fpk>\d+)/$', views.delete_comment, name='delete_comment'),
 	url(r'^likefact/$', views.likeFact, name='likeFact'),
 	url(r'^dislikefact/$', views.dislikeFact, name='dislikeFact'),
+	url(r'^truecomment/$', views.trueComment, name='trueComment'),
+	url(r'^falsecomment/$', views.falseComment, name='falseComment'),
+	url(r'^sortofcomment/$', views.sortOfComment, name='sortOfComment'),
 	path('signup/', views.SignUp.as_view(), name='signup'),
 	path('accounts/',include('django.contrib.auth.urls'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

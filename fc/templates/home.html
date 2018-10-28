@@ -1,15 +1,46 @@
 {% extends 'base.html' %}
 {% csrf_token %}
+{% load staticfiles %}
 {% block content %}
+
+<head>
+    <script src="{% static 'js/jquery.js' %}"></script>
+    <script src="{% static 'js/ajax-js.js' %}"></script>
+</head>
+
+
 <div class="newFact">
-    			{% if user.is_authenticated %}
-    				<a href="{% url 'fc_new' %}" class="btn btn-lg btn-primary">New Fact Check</a>
-    			{% endif %}
-			</div>
+    	{% if user.is_authenticated %}
+    		<a href="{% url 'fc_new' %}" class="btn btn-lg btn-primary">New Fact Check</a>
+    	{% endif %}
+</div>
 {% for fact in facts %}
 	<div class='fcList'>
 		<h2><a href="{% url 'fc_detail' pk=fact.pk %}">{{ fact.title }}</a></h2>
 		<p>{{ fact.text|linebreaksbr }}</p>
+
+		<div data-role="review_container" data-fc_id="{{fact.id}}">
+            <strong>Likes: </strong><strong data-role="like_count">{{ fact.totalLikes }}</strong> 
+            <strong>Dislikes: </strong><strong data-role="dislike_count">{{ fact.totalDislikes }}</strong>
+                <button data-action="likes" class="btn btn-primary" type="button">
+                    <span class="glyphicon glyphicon-thumbs-up"></span>
+                    Like
+                </button>
+                <button data-action="dislikes" class="btn btn-primary" type="button">
+                    <span class="glyphicon glyphicon-thumbs-down"></span>
+                    Dislike
+                </button>
+        </div>
+
+        {% if user.is_authenticated %}
+        	{% if fc.author == user %}
+        		<a class="btn btn-default" href="{% url 'fc_edit' pk=fc.pk %}">Edit</a>
+                <a class="btn btn-default" href="{% url 'fc_delete' pk=fc.pk %}">Delete</a>
+        	{% endif %}
+        	<a href="{% url 'add_comment_to_post' pk=fact.pk %}">Check Fact</a>
+        {% else %}
+        	<a href="{% url 'login' %}">Log in to check fact</a>
+        {% endif %}
 	</div>
 {% endfor %}
 {% endblock %}
