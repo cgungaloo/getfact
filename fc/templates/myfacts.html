@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% csrf_token %}
+{% load staticfiles %}
+{% block content %}
+	<h1>Your Facts</h1>
+	<h2><a href="{% url 'myaccount' %}">Your Profile</a></h2>
+
+	{% if user.is_authenticated %}
+
+		{% for fact in facts %}
+			<div class='fcList'>
+				<h2><a href="{% url 'fc_detail' pk=fact.pk %}">{{ fact.title }}</a></h2>
+        		<img src="{{ fact.author.profile.image.url }}" width="50">
+				<p>{{ fact.text|linebreaksbr }}</p>
+        		{% if fc.author == user %}
+        			<a class="btn btn-default" href="{% url 'fc_edit' pk=fc.pk %}">Edit</a>
+                	<a class="btn btn-default" href="{% url 'fc_delete' pk=fc.pk %}">Delete</a>
+                 {% else %}
+        			<a href="{% url 'login' %}">Log in to check fact</a>
+        		{% endif %}
+		</div>
+
+	{% endfor %}
+		<a href="{% url 'login' %}">Log in to view your profile</a>
+	{% endif %}
+{% endblock %}

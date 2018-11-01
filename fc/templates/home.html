@@ -17,6 +17,7 @@
 {% for fact in facts %}
 	<div class='fcList'>
 		<h2><a href="{% url 'fc_detail' pk=fact.pk %}">{{ fact.title }}</a></h2>
+        <img src="{{ fact.author.profile.image.url }}" width="50">
 		<p>{{ fact.text|linebreaksbr }}</p>
 
 		<div data-role="review_container" data-fc_id="{{fact.id}}">

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% csrf_token %}
+{% block content %}
+	{% if user.is_authenticated %}
+		<img src="{{ user.profile.image.url }}" width="140">
+		<h2>My Account: {{ user.username }}</h2>
+
+		<h2>Change Password</h2>
+		<h2>Change Profile Picture</h2>
+		<h2>Delete Account</h2>
+
+		<h2><a href="{% url 'myfacts' %}">My Facts</a></h2>
+		<h2>My Facts<h2>
+		<h2>My Comments</h2>
+
+
+		<h2>
+	{% else %}
+		<h1><a href="{% url 'login' %}">Log in to view your profile</a></h1>
+	{% endif %}
+{% endblock %}

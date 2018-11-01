@@ -13,8 +13,16 @@ import json
 # Create your views here.
 def home(request):
 	facts = Fact.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
-
 	return render(request, 'home.html',{'facts':facts})
+
+@login_required
+def myfacts(request):
+	facts = Fact.objects.filter(author=request.user,published_date__lte=timezone.now()).order_by('published_date')
+	return render(request, 'myfacts.html',{'facts':facts})
+
+def myaccount(request):
+	print('In myaccount')
+	return render(request,'myaccount.html')
 
 def fc_detail(request,pk):
 	print("In FC Detail#############")
@@ -234,7 +242,9 @@ def sortOfComment(request):
 
 	return HttpResponse(json.dumps(commentReviewData))
 
-
+def password_reset(request):
+	print("In Form")
+	return render(request, 'registration/password_reset_form.html')
 
 class SignUp(generic.CreateView):
     form_class = UserCreationForm
