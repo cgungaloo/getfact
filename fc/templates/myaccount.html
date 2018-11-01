@@ -5,7 +5,7 @@
 		<img src="{{ user.profile.image.url }}" width="140">
 		<h2>My Account: {{ user.username }}</h2>
 
-		<h2>Change Password</h2>
+		<h2><a href="{% url 'password_change' %}">Change Password</a></h2>
 		<h2>Change Profile Picture</h2>
 		<h2>Delete Account</h2>
 
