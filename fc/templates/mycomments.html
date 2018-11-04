@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% csrf_token %}
+{% load staticfiles %}
+{% block content %}
+	<h1>Your Comments</h1>
+	<h2><a href="{% url 'myaccount' %}">Your Profile</a></h2>
+
+	{% if user.is_authenticated %}
+
+	{% for comment in comments %}
+    <div class="comment">
+        <div class="date">{{ comment.created_date }}</div>
+        <strong>{{ comment.author }}</strong>
+        <p>{{ comment.text|linebreaks }}</p>
+        <p>For: <a href="{% url 'fc_detail' pk=comment.comment.id%}">{{ comment.comment }}</a></p>
+        <div data-role="creview_container" data-c_id="{{comment.id}}">
+            <strong>True: </strong><strong data-role="true_count">{{ comment.totalTrues }}</strong> 
+            <strong>Sort Of True: </strong><strong data-role="sortof_count">{{ comment.totalSortOfs }}</strong> 
+            <strong>False: </strong><strong data-role="false_count">{{ comment.totalFalses }}</strong> 
+
+        </div>
+
+
+            {% if comment.author == user %}
+            	<a class="btn btn-default" href="{% url 'delete_comment' pk=comment.pk fpk=comment.comment.pk %}">Delete</a>
+            {% endif %}
+    </div>
+	{% empty %}
+    	<p>No fact checks yet, keep hope alive ;)</p>
+	{% endfor %}
+	</div>
+	{% endif %}
+{% endblock %}

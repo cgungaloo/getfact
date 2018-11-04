@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Fact, Comment, LikeDislike, User, ReviewComment
+from .models import Fact, Comment, LikeDislike, User, ReviewComment,Profile
 from django.utils import timezone
-from .forms import FcForm, CommentForm
+from .forms import FcForm, CommentForm, ImageUploadForm
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
@@ -20,8 +20,33 @@ def myfacts(request):
 	facts = Fact.objects.filter(author=request.user,published_date__lte=timezone.now()).order_by('published_date')
 	return render(request, 'myfacts.html',{'facts':facts})
 
+@login_required
+def mycomments(request):
+	comments = Comment.objects.filter(author=request.user).order_by('created_date')
+	print(len(comments))
+	return render(request, 'mycomments.html',{'comments':comments})
+
+# @login_required
+# def deleteaccount(request):
+# 	try:
+# 		Profile.objects.get(user=request.user).delete()
+# 		User.objects.get(user=request.user).delete()
+# 		facts = Fact.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
+# 		return render(request, 'home.html',{'facts':facts})	
+# 	except User.DoesNotExist:
+# 		print("User does not exist")
+# 		return(request,'myaccount.html')
+
+
 def myaccount(request):
 	print('In myaccount')
+	print("Trying to change image")
+	if request.method == 'POST':
+		form = ImageUploadForm(request.POST, request.FILES)
+		if form.is_valid():
+			m = Profile.objects.get(user=request.user)
+			m.image = form.cleaned_data['image']
+			m.save()
 	return render(request,'myaccount.html')
 
 def fc_detail(request,pk):
@@ -69,6 +94,18 @@ def add_comment_to_post(request,pk):
 	else:
 		form =CommentForm()
 	return render(request,'add_comment_to_post.html',{'form':form})
+
+@login_required
+def upload_pic(request):
+	print("Trying to change image")
+	if request.method == 'POST':
+		form = ImageUploadForm(request.POST, request.FILES)
+		if form.is_valid():
+			m = profile.objects.get(pk=request.user)
+			m.image = form.cleaned_data['image']
+			m.save()
+			return HttpResponse('image upload success')
+	return HttpResponseForbidden('allowed only via POST')
 
 @login_required
 def fc_delete(request,pk):

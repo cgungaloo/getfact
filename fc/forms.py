@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Fact,Comment
+from .models import Fact,Comment,Profile
 
 class FcForm(forms.ModelForm):
 
@@ -12,3 +12,6 @@ class CommentForm(forms.ModelForm):
 	class Meta:
 		model = Comment
 		fields = ('text',)
+
+class ImageUploadForm(forms.Form):
+	image = forms.ImageField()

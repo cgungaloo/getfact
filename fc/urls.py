@@ -22,7 +22,9 @@ from django.conf.urls.static import static
 urlpatterns =[
 	url(r'^$',views.home,name='home'),
 	url(r'myfacts',views.myfacts,name='myfacts'),
+	url(r'mycomments',views.mycomments,name='mycomments'),
 	url(r'myaccount/',views.myaccount,name='myaccount'),
+	url(r'^myaccount/upload_profile_pic',views.upload_pic,name='upload_pic'),
 	url(r'^fc/new/$',views.fc_new,name='fc_new'),
 	url(r'^fc/(?P<pk>\d+)/edit/$',views.fc_edit,name='fc_edit'),
 	url(r'^fc/(?P<pk>\d+)/delete/$',views.fc_delete,name='fc_delete'),
