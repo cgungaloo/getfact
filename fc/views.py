@@ -5,6 +5,7 @@ from .forms import FcForm, CommentForm, ImageUploadForm
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import logout
 from django.urls import reverse_lazy
 from django.views import generic
 from django.http import HttpResponse
@@ -26,18 +27,20 @@ def mycomments(request):
 	print(len(comments))
 	return render(request, 'mycomments.html',{'comments':comments})
 
-# @login_required
-# def deleteaccount(request):
-# 	try:
-# 		Profile.objects.get(user=request.user).delete()
-# 		User.objects.get(user=request.user).delete()
-# 		facts = Fact.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
-# 		return render(request, 'home.html',{'facts':facts})	
-# 	except User.DoesNotExist:
-# 		print("User does not exist")
-# 		return(request,'myaccount.html')
+@login_required
+def deleteaccount(request):
+	try:
+		Profile.objects.get(user=request.user).delete()
+		User.objects.get(username=request.user.username).delete()
+		facts = Fact.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
+		logout(request)
+		return render(request, 'home.html',{'facts':facts})	
+	except User.DoesNotExist:
+		print("User does not exist")
+		return(request,'myaccount.html')
 
 
+@login_required
 def myaccount(request):
 	print('In myaccount')
 	print("Trying to change image")
@@ -54,6 +57,7 @@ def fc_detail(request,pk):
 	fc = get_object_or_404(Fact, pk=pk)
 	return render(request, 'fc_detail.html', {'fc': fc})
 
+@login_required
 def fc_new(request):
 	if request.method == "POST":
 		form = FcForm(request.POST)
@@ -81,6 +85,7 @@ def fc_edit(request,pk):
 		form = FcForm(instance=fc)
 	return render(request,'fc_edit.html',{'form':form})
 
+@login_required
 def add_comment_to_post(request,pk):
 	fc = get_object_or_404(Fact, pk=pk)
 	if request.method =="POST":

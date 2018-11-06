@@ -8,7 +8,7 @@ from django.dispatch import receiver
 
 # Create your models here.
 class Fact(models.Model):
-	author = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+	author = models.ForeignKey('auth.User', on_delete=models.SET_NULL,null=True)
 	title = models.CharField(max_length=200)
 	text = models.TextField()
 	created_date = models.DateTimeField(
@@ -35,11 +35,11 @@ class LikeDislike(models.Model):
 	)
 
 	vote = models.SmallIntegerField(verbose_name="vote", choices=VOTES)
-	user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+	user = models.ForeignKey('auth.User', on_delete=models.SET_NULL,null=True)
 	fcId = models.ForeignKey('fc.Fact', on_delete=models.CASCADE)
 
 class Comment(models.Model):
-	author = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+	author = models.ForeignKey('auth.User', on_delete=models.SET_NULL,null=True)
 	comment = models.ForeignKey('fc.Fact', on_delete=models.CASCADE, related_name='comments')
 	text = models.TextField()
 	created_date = models.DateTimeField(default=timezone.now)
@@ -59,12 +59,12 @@ class ReviewComment(models.Model):
 		)
 
 	vote = models.SmallIntegerField(verbose_name="vote", choices=VOTES)
-	user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+	user = models.ForeignKey('auth.User', on_delete=models.SET_NULL,null=True)
 	comment = models.ForeignKey('fc.Comment', on_delete=models.CASCADE)
 
 
 class Profile(models.Model):
-	user = models.OneToOneField(User, on_delete=models.CASCADE)
+	user = models.OneToOneField(User, on_delete=models.SET_NULL,null=True)
 	image= models.ImageField(upload_to='profile_image',default='profile_image/SSMILE.jpg')
 
 @receiver(post_save, sender=User)

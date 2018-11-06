@@ -23,6 +23,7 @@ urlpatterns =[
 	url(r'^$',views.home,name='home'),
 	url(r'myfacts',views.myfacts,name='myfacts'),
 	url(r'mycomments',views.mycomments,name='mycomments'),
+	url(r'deleteaccount',views.deleteaccount,name='deleteaccount'),
 	url(r'myaccount/',views.myaccount,name='myaccount'),
 	url(r'^myaccount/upload_profile_pic',views.upload_pic,name='upload_pic'),
 	url(r'^fc/new/$',views.fc_new,name='fc_new'),

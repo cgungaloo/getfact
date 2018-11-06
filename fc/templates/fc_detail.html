@@ -13,8 +13,13 @@
             </div>
         {% endif %}
         <h1>{{ fc.title }}</h1>
-        <img src="{{ fc.author.profile.image.url }}" width="240">
-        <p>{{ fc.author }}</p>
+        {% if fc.author != None %}
+            <img src="{{ fc.author.profile.image.url }}" width="240">
+            <p>{{ fc.author }}</p>
+        {% else %}
+            <img src="../../media/profile_image/SSMILE.jpg" width="240">
+            <p>Anom</p>
+        {% endif %}
         <p>{{ fc.text|linebreaksbr }}</p>
 
         <div data-role="review_container" data-fc_id="{{fc.id}}">
@@ -44,7 +49,16 @@
     {% for comment in fc.comments.all %}
     <div class="comment">
         <div class="date">{{ comment.created_date }}</div>
-        <strong>{{ comment.author }}</strong>
+
+
+        {% if comment.author != None  %}
+            <img src="{{ comment.author.profile.image.url }}" width="50">
+            <strong>{{ comment.author }}</strong>
+        {% else %}
+            <img src="../../media/profile_image/SSMILE.jpg" width="50">
+            <strong>Anom</strong>
+        {% endif %}
+
         <p>{{ comment.text|linebreaks }}</p>
 
         <div data-role="creview_container" data-c_id="{{comment.id}}">
