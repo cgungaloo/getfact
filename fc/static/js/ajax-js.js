@@ -1,5 +1,13 @@
 $(document).ready(function() {
 
+    $("#flip").click(function(){
+        $("#imgpanel").slideToggle();
+    });
+
+    $("#flipdelete").click(function(){
+        $("#panel").slideToggle();
+    });
+
     $('[data-role=review_container]').on('click', '[data-action=likes]', function(e){
         var $review_container = $(e.delegateTarget);
         var fcid = $review_container.data("fc_id")

@@ -1,3 +1,24 @@
+#imgpanel, #flip {
+    padding: 5px;
+    width: 20%;
+}
+
+#imgpanel {
+    display: none;
+}
+
+img {
+    border-radius: 50%;
+}
+
+#panel{
+	display: none;
+}
+
+#panel a{
+	color: red;
+}
+
 .jumbotron{
 	background-color:#C2DAE2;
  	line-height: 10px;
