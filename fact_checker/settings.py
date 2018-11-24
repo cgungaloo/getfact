@@ -21,7 +21,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '_!tr%x&2s!@r4l1o#r3+j2^hd9ow9-#z44no$2(^vw#qg9r&+j'
+SECRET_KEY = properties['secretkey']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -86,7 +86,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'factcheckerdb',
         'USER':'fcadmin',
-        'PASSWORD':'admin',
+        'PASSWORD':properties['dbpwd'],
         'HOST':'localhost',
         'PORT':'',
     }
