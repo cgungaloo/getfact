@@ -1,10 +1,10 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Fact, Comment, LikeDislike, User, ReviewComment,Profile
 from django.utils import timezone
-from .forms import FcForm, CommentForm, ImageUploadForm
+from .forms import FcForm, CommentForm, ImageUploadForm, SignUpForm
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserCreationForm
+# from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import logout
 from django.urls import reverse_lazy
 from django.views import generic
@@ -296,6 +296,6 @@ def password_reset(request):
 
 
 class SignUp(generic.CreateView):
-    form_class = UserCreationForm
+    form_class = SignUpForm
     success_url = reverse_lazy('login')
     template_name = 'signup.html'
