@@ -39,6 +39,11 @@ def deleteaccount(request):
 		print("User does not exist")
 		return(request,'myaccount.html')
 
+def search(request):
+		search_item = request.GET.get('search_item')
+		searchfc= Fact.objects.filter(title__icontains=search_item)
+		return render(request,'search.html',{'facts':searchfc})
+
 
 @login_required
 def myaccount(request):
@@ -287,6 +292,8 @@ def sortOfComment(request):
 def password_reset(request):
 	print("In Form")
 	return render(request, 'registration/password_reset_form.html')
+
+
 
 class SignUp(generic.CreateView):
     form_class = UserCreationForm

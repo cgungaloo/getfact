@@ -14,6 +14,7 @@
 		<nav class="toolbar">
 			<ul>
 			<li><a class="navbar-brand" href="{%url 'home' %}">Get Facted</a></li>
+
 			<div id="user">
 			{% if user.is_authenticated %}
   				<li><p>Hi {{ user.username }}!</p></li>
@@ -23,6 +24,19 @@
 				 <li><a href="{% url 'login' %}" class="btn btn-lg btn-primary">Login</a></li>
 				 <li><a href="{% url 'signup'%}?next={{request.path}}" class="btn btn-lg btn-primary">Sign Up</a></li>
 			{% endif %}
+			</div>
+						<div id="search">
+			<li>
+
+				<form id="searchform" action="{% url 'search' %}" method="get" accept-charset="utf-8">
+      				<input class="searchfield" id="searchbox" name="search_item" type="text" placeholder="Search">
+      				   <button class="btn btn-lg btn-primary" type="submit">
+      				   	<b>
+       				 	Search
+       				 </b>
+     				 </button>
+    			</form>
+			</li>
 			</div>
 		</ul>
 
