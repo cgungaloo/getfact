@@ -1,20 +1,32 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Fact, Comment, LikeDislike, User, ReviewComment,Profile
 from django.utils import timezone
-from .forms import FcForm, CommentForm, ImageUploadForm, SignUpForm
+from .forms import FcForm, CommentForm, ImageUploadForm, SignUpForm, ProfileEditForm
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
-# from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import logout
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from .tokens import account_activation_token
+from django.contrib.auth import logout,login, authenticate
+from django.contrib.auth.models import User
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.encoding import force_bytes, force_text
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.views import generic
 from django.http import HttpResponse
 import json
+from django.core.mail import EmailMessage
+from django.core.validators import validate_email
+from django import forms
+from django.shortcuts import render_to_response
 
 # Create your views here.
 def home(request):
-	facts = Fact.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
+	facts = Fact.objects.filter(published_date__lte=timezone.now()).order_by('published_date')[:20]
 	return render(request, 'home.html',{'facts':facts})
+
+def about(request):
+	return render(request,'about.html')
 
 @login_required
 def myfacts(request):
@@ -57,10 +69,43 @@ def myaccount(request):
 			m.save()
 	return render(request,'myaccount.html')
 
+@login_required
+def edit_profile(request):
+	user = User.objects.get(username=request.user.username)
+	if request.method == "POST":
+		form = ProfileEditForm(request.POST, instance = user)
+		if form.is_valid():
+			user = form.save(commit=False)
+			try:
+				validate_email(request.POST.get("email", ""))
+			except forms.ValidationError:
+				print("Invalid Email")
+				if request.POST.get("email") == "":
+					isnone=True
+				else:
+					isnone=False
+				return render(request,'profile_edit.html',{'form':form,'isnone':isnone})
+			user.username = request.user.username
+			user.save()
+			return redirect('myaccount')
+	else:
+		form = ProfileEditForm(instance=user)
+	return render(request,'profile_edit.html',{'form':form})
+
+
 def fc_detail(request,pk):
 	print("In FC Detail#############")
 	fc = get_object_or_404(Fact, pk=pk)
-	return render(request, 'fc_detail.html', {'fc': fc})
+	comments = Comment.objects.filter(comment=fc).order_by('-totalTrues')
+	print(len(comments))
+	if len(comments) > 1:
+		mostTrueComment = comments[0]
+		print(mostTrueComment.totalTrues)
+		if mostTrueComment.totalTrues ==0:
+			mostTrueComment = "neg"
+	else:
+		mostTrueComment = "neg"
+	return render(request, 'fc_detail.html', {'fc': fc,'mostTrueComment':mostTrueComment})
 
 @login_required
 def fc_new(request):
@@ -294,8 +339,41 @@ def password_reset(request):
 	return render(request, 'registration/password_reset_form.html')
 
 
+def signup(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.is_active = False
+            user.save()
+            current_site = get_current_site(request)
+            mail_subject = 'Activate your blog account.'
+            message = render_to_string('registration/acc_active_email.html', {
+                'user': user,
+                'domain': current_site.domain,
+                'uid':urlsafe_base64_encode(force_bytes(user.pk)).decode(),
+                'token':account_activation_token.make_token(user),
+            })
+            to_email = form.cleaned_data.get('email')
+            email = EmailMessage(
+                        mail_subject, message, to=[to_email]
+            )
+            email.send()
+            return render(request,'registration/email_confirm.html')
+    else:
+        form = SignUpForm()
+    return render(request, 'signup.html', {'form': form})
 
-class SignUp(generic.CreateView):
-    form_class = SignUpForm
-    success_url = reverse_lazy('login')
-    template_name = 'signup.html'
+def activate(request, uidb64, token):
+    try:
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        login(request, user)
+        return render(request,'registration/register_confirm.html')
+    else:
+        return HttpResponse('registration/invalid_link.html')

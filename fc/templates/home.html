@@ -9,11 +9,6 @@
 </head>
 
 
-<div class="newFact">
-    	{% if user.is_authenticated %}
-    		<a href="{% url 'fc_new' %}" class="btn btn-lg btn-primary">New Fact Check</a>
-    	{% endif %}
-</div>
 {% for fact in facts %}
 	<div class='fcList'>
 		<h2><a href="{% url 'fc_detail' pk=fact.pk %}">{{ fact.title }}</a></h2>

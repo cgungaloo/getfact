@@ -3,6 +3,21 @@
     width: 20%;
 }
 
+#BlankEmail{
+	background-color: #D88686;
+	font-weight: bold;
+	padding:3px;
+}
+
+#TopFactCheck{
+	background-color: #F4E7C7;
+	padding:3px;
+}
+
+.errorlist.nonfield, ul{
+	color:red;
+}
+
 #imgpanel {
     display: none;
 }
@@ -62,13 +77,18 @@ body {
 	margin-left: 15%;	
 }
 
-.newFact{
-	float:right;
+#newFact{
+	float:left;
+	padding-left: 10px;
 }
 
 .toolbar{
+	position: -webkit-sticky;
+    position: sticky;
+    top: 0;
 	padding-bottom: 5px;
 	background-color: #333;
+	z-index: 1;
 }
 
 

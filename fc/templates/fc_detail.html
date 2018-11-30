@@ -45,6 +45,38 @@
         	<a href="{% url 'login' %}">Log in to check fact</a>
         {% endif %}
     </div>
+    {% if mostTrueComment != 'neg' %}
+    <div id='TopFactCheck'>
+    <h2>Top Fact Check</h2>
+        <div class="date">{{ mostTrueComment.created_date }}</div>
+        {% if mostTrueComment.author != None  %}
+            <img src="{{ mostTrueComment.author.profile.image.url }}" width="50">
+            <strong>{{ mostTrueComment.author }}</strong>
+        {% else %}
+            <img src="../../media/profile_image/SSMILE.jpg" width="50">
+            <strong>Anom</strong>
+        {% endif %}
+        <p>{{ mostTrueComment.text|linebreaks }}</p>
+        <div data-role="creview_container" data-c_id="{{mostTrueComment.id}}">
+            <strong>True: </strong><strong data-role="true_count">{{ mostTrueComment.totalTrues }}</strong> 
+            <strong>Sort Of True: </strong><strong data-role="sortof_count">{{ mostTrueComment.totalSortOfs }}</strong> 
+            <strong>False: </strong><strong data-role="false_count">{{ mostTrueComment.totalFalses }}</strong> 
+
+            <button data-action="trueComment" class="btn btn-primary" type="button">
+                <span class="glyphicon glyphicon-thumbs-up"></span>
+                True
+            </button>
+            <button data-action="sortOfComment" class="btn btn-primary" type="button">
+                <span class="glyphicon glyphicon-minus"></span>
+                Sort Of True
+            </button>
+            <button data-action="falseComment" class="btn btn-primary" type="button">
+                <span class="glyphicon glyphicon-thumbs-down"></span>
+                False
+            </button>
+        </div>
+    </div>
+    {% endif %}
 
     {% for comment in fc.comments.all %}
     <div class="comment">

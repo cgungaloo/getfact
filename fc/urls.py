@@ -21,10 +21,12 @@ from django.conf.urls.static import static
 
 urlpatterns =[
 	url(r'^$',views.home,name='home'),
+	url(r'about',views.about,name='about'),
 	url(r'myfacts',views.myfacts,name='myfacts'),
 	url(r'mycomments',views.mycomments,name='mycomments'),
 	url(r'deleteaccount',views.deleteaccount,name='deleteaccount'),
 	url(r'myaccount/',views.myaccount,name='myaccount'),
+	url(r'edit_profile',views.edit_profile,name='edit_profile'),
 	url(r'search/',views.search,name='search'),
 	url(r'^myaccount/upload_profile_pic',views.upload_pic,name='upload_pic'),
 	url(r'^fc/new/$',views.fc_new,name='fc_new'),
@@ -47,6 +49,8 @@ urlpatterns =[
 	url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',PasswordResetConfirmView.as_view(template_name='registration/password_reset_confirm.html'),name='password_reset_confirm'),
 	url(r'^reset/done/$',PasswordResetCompleteView.as_view(template_name='registration/password_reset_complete.html'),name='password_reset_complete'),
 	# url('^', include('django.contrib.auth.urls')),
-	path('signup/', views.SignUp.as_view(), name='signup'),
+	url(r'signup/$',views.signup,name='signup'),
+	url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',views.activate, name='activate'),
+	# path('signup/', views.SignUp.as_view(), name='signup'),
 	# path('accounts/',include('django.contrib.auth.urls'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
