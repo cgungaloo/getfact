@@ -23,7 +23,9 @@ from django.shortcuts import render_to_response
 # Create your views here.
 def home(request):
 	facts = Fact.objects.filter(published_date__lte=timezone.now()).order_by('published_date')[:20]
-	return render(request, 'home.html',{'facts':facts})
+	topfacts = Fact.objects.all().order_by('-totalLikes')[:5]
+	print(str(len(topfacts)))
+	return render(request, 'home.html',{'facts':facts,'topfacts':topfacts})
 
 def about(request):
 	return render(request,'about.html')
@@ -94,7 +96,6 @@ def edit_profile(request):
 
 
 def fc_detail(request,pk):
-	print("In FC Detail#############")
 	fc = get_object_or_404(Fact, pk=pk)
 	comments = Comment.objects.filter(comment=fc).order_by('-totalTrues')
 	print(len(comments))

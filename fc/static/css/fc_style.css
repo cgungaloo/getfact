@@ -3,6 +3,32 @@
     width: 20%;
 }
 
+.card-body{
+	font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
+}
+
+.card-body a{
+	color: #F2F1DD;
+}
+
+.glyphicon.glyphicon-thumbs-up{
+	border-color: #5D77DE;
+	background-color :#5D77DE;
+}
+
+.column {
+    float: left;
+    width: 50%;
+}
+
+#topfacts{
+	margin-left: 10%;
+}
+.row{
+	width:100%;
+	margin-left: 10%;
+}
+
 #BlankEmail{
 	background-color: #D88686;
 	font-weight: bold;
@@ -61,6 +87,10 @@ body {
 	background-color: #F4EFEC;
 }
 
+.navbar-brand{
+	margin-left: 10%;	
+}
+
 .post h1,a{
 	font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
 	font-size: 1em;
@@ -91,6 +121,11 @@ body {
 	z-index: 1;
 }
 
+#newFact{
+	margin-left: 5px;
+}
+
+
 
 .toolbar ul{
 	list-style-type: none;
@@ -102,6 +137,7 @@ body {
 
 .toolbar li{
     float: left;
+    margin-left: 5px;
 }
 
 .navbar-brand{

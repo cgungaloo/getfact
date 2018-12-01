@@ -8,40 +8,55 @@
     <script src="{% static 'js/ajax-js.js' %}"></script>
 </head>
 
+<div class="row">
+    <div class="column">
+    {% for fact in facts %}
+    	<div class='fcList'>
+    		<h2><a href="{% url 'fc_detail' pk=fact.pk %}">{{ fact.title }}</a></h2>
+            {% if fact.author != None %}
+                <img src="{{ fact.author.profile.image.url }}" width="50">
+            {% else %}
+                <img src="../media/profile_image/SSMILE.jpg" width="50">
+            {% endif %}
 
-{% for fact in facts %}
-	<div class='fcList'>
-		<h2><a href="{% url 'fc_detail' pk=fact.pk %}">{{ fact.title }}</a></h2>
-        {% if fact.author != None %}
-            <img src="{{ fact.author.profile.image.url }}" width="50">
-        {% else %}
-            <img src="../media/profile_image/SSMILE.jpg" width="50">
-        {% endif %}
+    		<p>{{ fact.text|linebreaksbr }}</p>
 
-		<p>{{ fact.text|linebreaksbr }}</p>
+    		<div data-role="review_container" data-fc_id="{{fact.id}}">
+                <strong>Likes: </strong><strong data-role="like_count">{{ fact.totalLikes }}</strong> 
+                <strong>Dislikes: </strong><strong data-role="dislike_count">{{ fact.totalDislikes }}</strong>
+                    <button data-action="likes" class="btn btn-primary" type="button">
+                        <span class="glyphicon glyphicon-thumbs-up"></span>
+                        Like
+                    </button>
+                    <button data-action="dislikes" class="btn btn-primary" type="button">
+                        <span class="glyphicon glyphicon-thumbs-down"></span>
+                        Dislike
+                    </button>
+            </div>
 
-		<div data-role="review_container" data-fc_id="{{fact.id}}">
-            <strong>Likes: </strong><strong data-role="like_count">{{ fact.totalLikes }}</strong> 
-            <strong>Dislikes: </strong><strong data-role="dislike_count">{{ fact.totalDislikes }}</strong>
-                <button data-action="likes" class="btn btn-primary" type="button">
-                    <span class="glyphicon glyphicon-thumbs-up"></span>
-                    Like
-                </button>
-                <button data-action="dislikes" class="btn btn-primary" type="button">
-                    <span class="glyphicon glyphicon-thumbs-down"></span>
-                    Dislike
-                </button>
+            {% if user.is_authenticated %}
+            	{% if fc.author == user %}
+            		<a class="btn btn-default" href="{% url 'fc_edit' pk=fc.pk %}">Edit</a>
+                    <a class="btn btn-default" href="{% url 'fc_delete' pk=fc.pk %}">Delete</a>
+            	{% endif %}
+            	<a href="{% url 'add_comment_to_post' pk=fact.pk %}">Check Fact</a>
+            {% else %}
+            	<a href="{% url 'login' %}">Log in to check fact</a>
+            {% endif %}
         </div>
-
-        {% if user.is_authenticated %}
-        	{% if fc.author == user %}
-        		<a class="btn btn-default" href="{% url 'fc_edit' pk=fc.pk %}">Edit</a>
-                <a class="btn btn-default" href="{% url 'fc_delete' pk=fc.pk %}">Delete</a>
-        	{% endif %}
-        	<a href="{% url 'add_comment_to_post' pk=fact.pk %}">Check Fact</a>
-        {% else %}
-        	<a href="{% url 'login' %}">Log in to check fact</a>
-        {% endif %}
-	</div>
-{% endfor %}
+    {% endfor %}
+    </div>
+    <div class="column">
+        <div id="topfacts">
+              <div class="card bg-info text-white">
+    <div class="card-body">
+        <h2>Top Facts</h2>
+        {% for tf in topfacts %}
+            <h3><a href="{% url 'fc_detail' pk=tf.pk %}">{{ tf.title }}</a></h3>
+        {% endfor %}
+    </div>
+  </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
