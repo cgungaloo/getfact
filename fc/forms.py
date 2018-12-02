@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Fact,Comment,Profile
+from .models import Fact,Comment,Profile, ReportFact
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
@@ -48,3 +48,8 @@ class SignUpForm(UserCreationForm):
         if User.objects.filter(username=user).exists():
             raise forms.ValidationError("User Name already exists")
         return self.cleaned_data
+
+class ReportFactForm(forms.ModelForm):
+    class Meta:
+        model =ReportFact
+        fields =('reason',)

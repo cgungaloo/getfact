@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Fact, Comment, LikeDislike, User, ReviewComment,Profile
 from django.utils import timezone
-from .forms import FcForm, CommentForm, ImageUploadForm, SignUpForm, ProfileEditForm
+from .forms import FcForm, CommentForm, ImageUploadForm, SignUpForm, ProfileEditForm,ReportFactForm
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -378,3 +378,17 @@ def activate(request, uidb64, token):
         return render(request,'registration/register_confirm.html')
     else:
         return HttpResponse('registration/invalid_link.html')
+
+def report_fact(request,pk):
+	fc = get_object_or_404(Fact,pk=pk)
+	if request.method == "POST":
+		form = ReportFactForm(request.POST)
+		if form.is_valid():
+			rf = form.save(commit=False)
+			rf.fact = fc
+			rf.published_date = timezone.now()
+			rf.save()
+			return redirect('fc_detail', pk=fc.pk)
+	else:
+		form = ReportFactForm()
+	return render(request, 'report_fact.html',{'form':form,'fc':fc})

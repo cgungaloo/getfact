@@ -44,6 +44,7 @@
         {% else %}
         	<a href="{% url 'login' %}">Log in to check fact</a>
         {% endif %}
+            <a class="report" href="{% url 'report_fact' pk=fc.pk %}">Report</a>
     </div>
     {% if mostTrueComment != 'neg' %}
     <div id='TopFactCheck'>

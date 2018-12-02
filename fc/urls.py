@@ -35,6 +35,7 @@ urlpatterns =[
 	url(r'^fc_detail/(?P<pk>\d+)/$',views.fc_detail, name='fc_detail'),
 	url(r'^fc/(?P<pk>\d+)/comment/$', views.add_comment_to_post, name='add_comment_to_post'),
 	url(r'^fc/(?P<pk>\d+)/comment_delete/(?P<fpk>\d+)/$', views.delete_comment, name='delete_comment'),
+	url(r'^fc/(?P<pk>\d+)/reportfact/$',views.report_fact, name='report_fact'),
 	url(r'^likefact/$', views.likeFact, name='likeFact'),
 	url(r'^dislikefact/$', views.dislikeFact, name='dislikeFact'),
 	url(r'^truecomment/$', views.trueComment, name='trueComment'),

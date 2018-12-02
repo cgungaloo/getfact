@@ -69,6 +69,22 @@ class Profile(models.Model):
 	user = models.OneToOneField(User, on_delete=models.SET_NULL,null=True)
 	image= models.ImageField(upload_to='profile_image',default='profile_image/SSMILE.jpg')
 
+class ReportFact(models.Model):
+	fact = models.ForeignKey('fc.Fact', on_delete=models.CASCADE)
+	reason = models.TextField(max_length=300)
+	created_date = models.DateTimeField(
+		default=timezone.now)
+	investigated = models.BooleanField(default=False)
+	resolution = models.TextField(max_length=300,null=True)
+
+class ReportComment(models.Model):
+	comment = models.ForeignKey('fc.Comment', on_delete=models.CASCADE)
+	reason = models.TextField(max_length=300)
+	created_date = models.DateTimeField(
+		default=timezone.now)
+	investigated = models.BooleanField(default=False)
+	resolution = models.TextField(max_length=300,null=True)
+
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
 	if created:
@@ -77,3 +93,5 @@ def create_user_profile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
 	instance.profile.save()
+
+
