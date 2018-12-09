@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Fact, Comment, LikeDislike, User, ReviewComment,Profile
 from django.utils import timezone
-from .forms import FcForm, CommentForm, ImageUploadForm, SignUpForm, ProfileEditForm,ReportFactForm
+from .forms import FcForm, CommentForm, ImageUploadForm, SignUpForm, ProfileEditForm,ReportFactForm, ReportCommentForm
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -392,3 +392,18 @@ def report_fact(request,pk):
 	else:
 		form = ReportFactForm()
 	return render(request, 'report_fact.html',{'form':form,'fc':fc})
+
+def report_comment(request,pk,fpk):
+	comment = get_object_or_404(Comment,pk=pk)
+	fc = get_object_or_404(Fact,pk=fpk)
+	if request.method == "POST":
+		form = ReportCommentForm(request.POST)
+		if form.is_valid():
+			rf = form.save(commit=False)
+			rf.comment = comment
+			rf.published_date = timezone.now()
+			rf.save()
+			return redirect('fc_detail', pk=fc.pk)
+	else:
+		form = ReportCommentForm()
+	return render(request, 'report_comment.html',{'form':form,'comment':comment})

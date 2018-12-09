@@ -3,6 +3,15 @@
     width: 20%;
 }
 
+#check_fact{
+	margin-top: 1%;
+}
+#logo img{
+	width: 70px;
+	height: 70px;
+	float:left;
+}
+
 .card-body{
 	font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
 }
@@ -87,14 +96,76 @@ body {
 	background-color: #F4EFEC;
 }
 
+#comment_container{
+	margin-top: 10px;
+	margin-left: 10px;
+	margin-bottom: 10px;
+}
+
+#comment_container ul{
+	list-style: none;
+}
+
+#comment_container li{
+	float: left;
+}
+
 .navbar-brand{
 	margin-left: 10%;	
+}
+
+.comment{
+	margin-top: 1%;
+}
+
+.card-body{
+	width: 700px;
+}
+
+.card-title{
+	color: #379337;
+}
+
+.treview_container{
+	margin-left: 17px; 
+	padding-bottom: 10px;
+}
+
+.card.border-success.mb-3{
+	width: 100%;
+}
+.card-text p{
+	color: #000000;
 }
 
 .post h1,a{
 	font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
 	font-size: 1em;
 	color:#667CA2;
+}
+
+.post #detailTitle{
+	font-size: 5em;
+}
+
+.post #postAuthor{
+	margin-top: -30px;
+	margin-left: 10%;
+}
+.post ul{
+	list-style-type: none;
+	color:#000000;
+	margin-bottom: 23%;
+}
+
+.post li{
+  float: left;
+  padding-right: 7%;
+}
+
+.post img{
+	width:200px;
+	height: 200px;
 }
 
 .post p{
@@ -124,6 +195,7 @@ body {
 #newFact{
 	margin-left: 5px;
 }
+
 
 
 

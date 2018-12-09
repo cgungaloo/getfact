@@ -12,75 +12,107 @@
                 {{ fc.published_date }}
             </div>
         {% endif %}
-        <h1>{{ fc.title }}</h1>
+        <div id="detailTitle">
+            <h1>{{ fc.title }}</h1>
+        </div>
+        <ul>
+
         {% if fc.author != None %}
-            <img src="{{ fc.author.profile.image.url }}" width="240">
+            <li><img src="{{ fc.author.profile.image.url }}" width="240"></li>
+        {% else %}
+            <li><img src="../../media/profile_image/SSMILE.jpg" width="240"></li>
+        {% endif %}
+
+        <li>
+              <div class="card bg-light text-dark">
+                <div class="card-body">
+                    <p>{{ fc.text|linebreaksbr }}</p>
+                </div>
+                </div>
+        </li>
+
+        </ul>
+        <div id="postAuthor">
+        {% if fc.author != None %}
             <p>{{ fc.author }}</p>
         {% else %}
-            <img src="../../media/profile_image/SSMILE.jpg" width="240">
             <p>Anom</p>
         {% endif %}
-        <p>{{ fc.text|linebreaksbr }}</p>
-
-        <div data-role="review_container" data-fc_id="{{fc.id}}">
-            <strong>Likes: </strong><strong data-role="like_count">{{ fc.totalLikes }}</strong> 
-            <strong>Dislikes: </strong><strong data-role="dislike_count">{{ fc.totalDislikes }}</strong>
+        </div>
+        <div data-role="review_container" data-fc_id="{{fc.id}}">   
                 <button data-action="likes" class="btn btn-primary" type="button">
                     <span class="glyphicon glyphicon-thumbs-up"></span>
-                    Like
+                    <strong data-role="like_count">
+                     Like {{ fc.totalLikes }}
+                    </strong>
                 </button>
                 <button data-action="dislikes" class="btn btn-primary" type="button">
                     <span class="glyphicon glyphicon-thumbs-down"></span>
-                    Dislike
+                    <strong data-role="dislike_count">
+                    Dislike {{ fc.totalDislikes }}
+                </strong>
                 </button>
         </div>
 
         {% if user.is_authenticated %}
+            <div id="check_fact">
+                <button>
+                    <a class="btn btn-default"  href="{% url 'add_comment_to_post' pk=fc.pk %}">Check Fact</a>
+                </button>
+            </div>
         	{% if fc.author == user %}
         		<a class="btn btn-default" href="{% url 'fc_edit' pk=fc.pk %}">Edit</a>
                 <a class="btn btn-default" href="{% url 'fc_delete' pk=fc.pk %}">Delete</a>
         	{% endif %}
-        	<a href="{% url 'add_comment_to_post' pk=fc.pk %}">Check Fact</a>
         {% else %}
         	<a href="{% url 'login' %}">Log in to check fact</a>
         {% endif %}
-            <a class="report" href="{% url 'report_fact' pk=fc.pk %}">Report</a>
+            <a class="btn btn-default" href="{% url 'report_fact' pk=fc.pk %}">Report</a>
     </div>
-    {% if mostTrueComment != 'neg' %}
-    <div id='TopFactCheck'>
-    <h2>Top Fact Check</h2>
-        <div class="date">{{ mostTrueComment.created_date }}</div>
-        {% if mostTrueComment.author != None  %}
-            <img src="{{ mostTrueComment.author.profile.image.url }}" width="50">
-            <strong>{{ mostTrueComment.author }}</strong>
-        {% else %}
-            <img src="../../media/profile_image/SSMILE.jpg" width="50">
-            <strong>Anom</strong>
-        {% endif %}
-        <p>{{ mostTrueComment.text|linebreaks }}</p>
-        <div data-role="creview_container" data-c_id="{{mostTrueComment.id}}">
-            <strong>True: </strong><strong data-role="true_count">{{ mostTrueComment.totalTrues }}</strong> 
-            <strong>Sort Of True: </strong><strong data-role="sortof_count">{{ mostTrueComment.totalSortOfs }}</strong> 
-            <strong>False: </strong><strong data-role="false_count">{{ mostTrueComment.totalFalses }}</strong> 
 
-            <button data-action="trueComment" class="btn btn-primary" type="button">
-                <span class="glyphicon glyphicon-thumbs-up"></span>
-                True
-            </button>
-            <button data-action="sortOfComment" class="btn btn-primary" type="button">
-                <span class="glyphicon glyphicon-minus"></span>
-                Sort Of True
-            </button>
-            <button data-action="falseComment" class="btn btn-primary" type="button">
-                <span class="glyphicon glyphicon-thumbs-down"></span>
-                False
-            </button>
+
+    {% if mostTrueComment != 'neg' %}
+        <div class="card border-success mb-3">
+            <div class="card-header"><h5 class="card-title">Top Fact Check</h5></div>
+            <div class="card-body text-success">
+                <div class="date">{{ mostTrueComment.created_date }}</div>
+                {% if mostTrueComment.author != None  %}
+                    <img src="{{ mostTrueComment.author.profile.image.url }}" width="50">
+                    <strong>{{ mostTrueComment.author }}</strong>
+                {% else %}
+                    <img src="../../media/profile_image/SSMILE.jpg" width="50">
+                    <strong>Anom</strong>
+                {% endif %}
+                <div class="card-text"><p>{{ mostTrueComment.text|linebreaks }}</p></div>
+            </div>
+            <div class="treview_container" data-c_id="{{mostTrueComment.id}}">
+                <button data-action="mosttrueComment" class="btn btn-primary" type="button">
+                    <span class="glyphicon glyphicon-thumbs-up"></span>
+                    <strong data-role="true_count">
+                        True {{ mostTrueComment.totalTrues }}
+                    </strong>
+
+                </button>
+                <button data-action="mostsortOfComment" class="btn btn-primary" type="button">
+                    <span class="glyphicon glyphicon-minus"></span>
+                    <strong data-role="sortof_count">
+                    Sort Of True {{ mostTrueComment.totalSortOfs }}
+                </strong>
+                </button>
+                <button data-action="mostfalseComment" class="btn btn-primary" type="button">
+                    <span class="glyphicon glyphicon-thumbs-down"></span>
+                    <strong data-role="false_count">
+                    False {{ mostTrueComment.totalFalses }}
+                </strong>
+                </button>
+            </div>
         </div>
-    </div>
     {% endif %}
 
     {% for comment in fc.comments.all %}
     <div class="comment">
+        <div class="card bg-light text-dark">
+        <div id="comment_container">
         <div class="date">{{ comment.created_date }}</div>
 
 
@@ -91,37 +123,44 @@
             <img src="../../media/profile_image/SSMILE.jpg" width="50">
             <strong>Anom</strong>
         {% endif %}
-
-        <p>{{ comment.text|linebreaks }}</p>
+        <div class="card-body">
+            <p>{{ comment.text|linebreaks }}</p>
+        </div>
 
         <div data-role="creview_container" data-c_id="{{comment.id}}">
-            <strong>True: </strong><strong data-role="true_count">{{ comment.totalTrues }}</strong> 
-            <strong>Sort Of True: </strong><strong data-role="sortof_count">{{ comment.totalSortOfs }}</strong> 
-            <strong>False: </strong><strong data-role="false_count">{{ comment.totalFalses }}</strong> 
-
             <button data-action="trueComment" class="btn btn-primary" type="button">
                 <span class="glyphicon glyphicon-thumbs-up"></span>
-                True
+                <strong data-role="true_count">
+                    True {{ comment.totalTrues }}
+                </strong>
             </button>
             <button data-action="sortOfComment" class="btn btn-primary" type="button">
                 <span class="glyphicon glyphicon-minus"></span>
-                Sort Of True
+                <strong data-role="sortof_count">
+                    Sort Of True {{ comment.totalSortOfs }}
+                </strong>
             </button>
             <button data-action="falseComment" class="btn btn-primary" type="button">
                 <span class="glyphicon glyphicon-thumbs-down"></span>
-                False
+                <strong data-role="false_count">
+                    False {{ comment.totalFalses }}
+                </strong>
             </button>
         </div>
 
-
+        <ul>
+        <li><a class="btn btn-default" href="{% url 'report_comment' pk=comment.pk fpk=fc.pk %}">Report</a></li>
         {% if user.is_authenticated %}
             {% if comment.author == user %}
-                <a class="btn btn-default" href="{% url 'delete_comment' pk=comment.pk fpk=fc.pk %}">Delete</a>
+                <li><a class="btn btn-default" href="{% url 'delete_comment' pk=comment.pk fpk=fc.pk %}">Delete</a></li>
             {% endif %}
         {% endif %}
+        </ul>
     </div>
+     </div>
 	{% empty %}
     	<p>No fact checks yet, keep hope alive ;)</p>
+    </div>
 	{% endfor %}
 	</div>
 {% endblock %}

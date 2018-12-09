@@ -22,15 +22,13 @@
     		<p>{{ fact.text|linebreaksbr }}</p>
 
     		<div data-role="review_container" data-fc_id="{{fact.id}}">
-                <strong>Likes: </strong><strong data-role="like_count">{{ fact.totalLikes }}</strong> 
-                <strong>Dislikes: </strong><strong data-role="dislike_count">{{ fact.totalDislikes }}</strong>
                     <button data-action="likes" class="btn btn-primary" type="button">
                         <span class="glyphicon glyphicon-thumbs-up"></span>
-                        Like
+                        <strong data-role="like_count"> Like {{ fact.totalLikes }}</strong>
                     </button>
                     <button data-action="dislikes" class="btn btn-primary" type="button">
                         <span class="glyphicon glyphicon-thumbs-down"></span>
-                        Dislike
+                        <strong data-role="dislike_count">Dislike {{ fact.totalDislikes }}</strong>
                     </button>
             </div>
 

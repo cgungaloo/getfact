@@ -18,8 +18,8 @@ $(document).ready(function() {
         $.get('/likefact/', {fc_id: fcid}, function(data){
 
            data = JSON.parse(data);
-           $like_count.html(data["likes"]); 
-           $dislike_count.html(data["dislikes"]); 
+           $like_count.html("Like " + data["likes"]); 
+           $dislike_count.html("Dislike "+ data["dislikes"]); 
          });
     });
 
@@ -33,12 +33,64 @@ $(document).ready(function() {
         $.get('/dislikefact/', {fc_id: fcid}, function(data){
 
            data = JSON.parse(data);
-           $like_count.html(data["likes"]); 
-           $dislike_count.html(data["dislikes"]); 
+           $like_count.html("Like " + data["likes"]); 
+           $dislike_count.html("Dislike "+ data["dislikes"]); 
+         });
+    });
+
+    $('[class=treview_container]').on('click', '[data-action=mosttrueComment]', function(e){    
+        var $treview_container = $(e.delegateTarget);
+        var cid = $treview_container.data("c_id")
+        var $true_button = $(e.currentTarget);
+        var $true_count = $treview_container.find('[data-role=true_count]')
+        var $sortof_count= $treview_container.find('[data-role=sortof_count]')
+        var $false_count= $treview_container.find('[data-role=false_count]')
+
+        $.get('/truecomment/', {c_id: cid}, function(data){
+
+           data = JSON.parse(data);
+           $true_count.html("True " + data["trues"]); 
+           $sortof_count.html("Sort Of True "+ data["sortofs"]); 
+           $false_count.html("False " + data["falses"]); 
+         });
+    });
+
+    $('[class=treview_container]').on('click', '[data-action=mostfalseComment]', function(e){
+        var $treview_container = $(e.delegateTarget);
+        var cid = $treview_container.data("c_id")
+        var $false_button = $(e.currentTarget);
+        var $true_count = $treview_container.find('[data-role=true_count]')
+        var $sortof_count= $treview_container.find('[data-role=sortof_count]')
+        var $false_count= $treview_container.find('[data-role=false_count]')
+
+        $.get('/falsecomment/', {c_id: cid}, function(data){
+
+           data = JSON.parse(data);
+           $true_count.html("True " + data["trues"]); 
+           $sortof_count.html("Sort Of True "+ data["sortofs"]); 
+           $false_count.html("False " + data["falses"]); 
+         });
+    });
+
+    $('[class=treview_container]').on('click', '[data-action=mostsortOfComment]', function(e){
+        var $treview_container = $(e.delegateTarget);
+        var cid = $treview_container.data("c_id")
+        var $sortof_button = $(e.currentTarget);
+        var $true_count = $treview_container.find('[data-role=true_count]')
+        var $sortof_count= $treview_container.find('[data-role=sortof_count]')
+        var $false_count= $treview_container.find('[data-role=false_count]')
+
+        $.get('/sortofcomment/', {c_id: cid}, function(data){
+
+           data = JSON.parse(data);
+           $true_count.html("True " + data["trues"]); 
+           $sortof_count.html("Sort Of True "+ data["sortofs"]); 
+           $false_count.html("False " + data["falses"]); 
          });
     });
 
     $('[data-role=creview_container]').on('click', '[data-action=trueComment]', function(e){
+        console.log("Ive been called true");
         var $creview_container = $(e.delegateTarget);
         var cid = $creview_container.data("c_id")
         var $true_button = $(e.currentTarget);
@@ -49,9 +101,9 @@ $(document).ready(function() {
         $.get('/truecomment/', {c_id: cid}, function(data){
 
            data = JSON.parse(data);
-           $true_count.html(data["trues"]); 
-           $sortof_count.html(data["sortofs"]); 
-           $false_count.html(data["falses"]); 
+           $true_count.html("True " + data["trues"]); 
+           $sortof_count.html("Sort Of True " + data["sortofs"]); 
+           $false_count.html("False " + data["falses"]); 
          });
     });
 
@@ -66,9 +118,9 @@ $(document).ready(function() {
         $.get('/falsecomment/', {c_id: cid}, function(data){
 
            data = JSON.parse(data);
-           $true_count.html(data["trues"]); 
-           $sortof_count.html(data["sortofs"]); 
-           $false_count.html(data["falses"]); 
+           $true_count.html("True " + data["trues"]); 
+           $sortof_count.html("Sort Of True " + data["sortofs"]); 
+           $false_count.html("False " + data["falses"]); 
          });
     });
 
@@ -83,9 +135,9 @@ $(document).ready(function() {
         $.get('/sortofcomment/', {c_id: cid}, function(data){
 
            data = JSON.parse(data);
-           $true_count.html(data["trues"]); 
-           $sortof_count.html(data["sortofs"]); 
-           $false_count.html(data["falses"]); 
+           $true_count.html("True " + data["trues"]); 
+           $sortof_count.html("Sort Of True " + data["sortofs"]); 
+           $false_count.html("False " + data["falses"]); 
          });
     });
 

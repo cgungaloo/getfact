@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Fact,Comment,Profile, ReportFact
+from .models import Fact,Comment,Profile, ReportFact, ReportComment
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
@@ -53,3 +53,8 @@ class ReportFactForm(forms.ModelForm):
     class Meta:
         model =ReportFact
         fields =('reason',)
+
+class ReportCommentForm(forms.ModelForm):
+    class Meta:
+        model =ReportComment
+        fields =('reason',)        
