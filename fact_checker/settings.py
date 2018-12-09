@@ -83,7 +83,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'factcheckerdb',
-        'USER':'fcadmin',
+        'USER':'vtgeifqeogjhbs',
         'PASSWORD':os.environ.get('DB'),
         'HOST':'localhost',
         'PORT':'',
