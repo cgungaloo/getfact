@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = properties['secretkey']
+SECRET_KEY = os.environ.get('KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -30,7 +30,7 @@ ALLOWED_HOSTS = []
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'getfactsignup@gmail.com'
-EMAIL_HOST_PASSWORD = properties['smtpwd']
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST')
 EMAIL_PORT = 587
 
 # Application definition
@@ -86,7 +86,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'factcheckerdb',
         'USER':'fcadmin',
-        'PASSWORD':properties['dbpwd'],
+        'PASSWORD':os.environ.get('DB'),
         'HOST':'localhost',
         'PORT':'',
     }
